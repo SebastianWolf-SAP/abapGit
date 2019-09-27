@@ -118,8 +118,9 @@ CLASS zcl_abapgit_apack_reader IMPLEMENTATION.
 
   METHOD copy_manifest_descriptor.
 
-    DATA: ls_my_manifest_wo_deps TYPE zif_abapgit_apack_definitions=>ty_descriptor_wo_dependencies,
-          ls_my_dependency       TYPE zif_abapgit_apack_definitions=>ty_dependency.
+    DATA: ls_my_manifest_wo_deps   TYPE zif_abapgit_apack_definitions=>ty_descriptor_wo_dependencies,
+          ls_my_dependency_wo_devc TYPE zif_abapgit_apack_definitions=>ty_dependency_wo_package,
+          ls_my_dependency         TYPE zif_abapgit_apack_definitions=>ty_dependency.
 
     FIELD-SYMBOLS: <lg_descriptor>   TYPE any,
                    <lt_dependencies> TYPE ANY TABLE,
@@ -135,7 +136,9 @@ CLASS zcl_abapgit_apack_reader IMPLEMENTATION.
       ASSIGN COMPONENT 'DEPENDENCIES' OF STRUCTURE <lg_descriptor> TO <lt_dependencies>.
       IF <lt_dependencies> IS ASSIGNED.
         LOOP AT <lt_dependencies> ASSIGNING <lg_dependency>.
-          MOVE-CORRESPONDING <lg_dependency> TO ls_my_dependency.
+          CLEAR: ls_my_dependency, ls_my_dependency.
+          MOVE-CORRESPONDING <lg_dependency> TO ls_my_dependency_wo_devc.
+          MOVE-CORRESPONDING ls_my_dependency_wo_devc TO ls_my_dependency.
           INSERT ls_my_dependency INTO TABLE me->ms_cached_descriptor-dependencies.
         ENDLOOP.
         MOVE-CORRESPONDING <lg_descriptor> TO ls_my_manifest_wo_deps.

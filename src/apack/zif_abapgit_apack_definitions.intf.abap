@@ -1,12 +1,16 @@
 INTERFACE zif_abapgit_apack_definitions PUBLIC.
 
   TYPES:
-    BEGIN OF ty_dependency,
-      group_id       TYPE string,
-      artifact_id    TYPE string,
-      version        TYPE string,
-      git_url        TYPE string,
-      target_package TYPE devclass,
+    BEGIN OF ty_dependency_wo_package,
+      group_id    TYPE string,
+      artifact_id TYPE string,
+      version     TYPE string,
+      git_url     TYPE string,
+    END OF ty_dependency_wo_package,
+    BEGIN OF ty_dependency.
+      INCLUDE TYPE ty_dependency_wo_package.
+  TYPES:
+    target_package TYPE devclass,
     END OF ty_dependency,
 
     tt_dependencies    TYPE STANDARD TABLE OF ty_dependency
